@@ -4,7 +4,7 @@ import urllib2
 import urllib
 import time
 import os, sys
-
+import getpass
 
 """
     Main function.
@@ -12,7 +12,7 @@ import os, sys
 def main():
     if len(sys.argv) != 2 :
         print "Usage: tts_google.py <inputtext>"
-        speak("Bonjour Roman. Il est %s heures et %s minutes." % (time.strftime('%H'), time.strftime('%M')))
+        speak("Bonjour %s. Il est %s heures et %s minutes." % (getpass.getuser(), time.strftime('%H'), time.strftime('%M')))
     else:
         text = sys.argv[1]
         speak(text)
