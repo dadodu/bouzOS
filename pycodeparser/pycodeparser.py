@@ -22,19 +22,18 @@ class pycodeparser:
         self.tab_from   = []
         self.tab_path   = []
         self.functions  = {}        # Dependencies ...
+        self.methods    = {}
         self.classes    = {}
         self.dot = []
-        self.dot.append("digraph G {")
-        self.dot.append("rankdir=LR")
+        
         self.parser_fichier()
-        self.dot.append("}")
-        self.dot = '\n'.join(self.dot)
-        print self.dot
+        
         self.print_dico()
     
     def parser_fichier(self):
         current_class = None
         current_funct = None
+        current_method = None
         try:
             fp = open(self.file, 'r')
         except:
@@ -66,26 +65,32 @@ class pycodeparser:
                     self.classes.update({match.group(1):match.group(2)})
                 except:
                     self.classes.update({match.group(1):''})
-                if current_class is None:
-                    self.dot.append('%s;' % (match.group(1)));
-                else:
-                    self.dot.append('%s -> %s;' % (current_class, match.group(1)));
+                
                 current_class = match.group(1)
             # Functions -------------------------------------------------------#
-            match = re.match(r"^[ \t]*def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
+            match = re.match(r"^def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
                 try:
                     self.functions.update({match.group(1):match.group(2)})
                 except:
                     self.functions.update({match.group(1):''})
-                if current_funct is None:
-                    self.dot.append('%s;' % (match.group(1)));
-                else:
-                    if current_class is None:
-                        self.dot.append('%s;' % (match.group(1)));
-                    else:
-                        self.dot.append('%s -> %s;' % (current_class, match.group(1)));
+                
                 current_funct = match.group(1)
+            # Class methods ---------------------------------------------------#
+            match = re.match(r"^[ \t]+def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
+            if match:
+                if current_class is None:
+                    print "Gros fail !"
+                
+                if self.methods.has_key(current_class):
+                    tmp = self.methods[current_class]
+                    tmp.append(match.group(1))
+                else:
+                    tmp = [match.group(1)]
+                
+                self.methods.update({current_class:tmp})
+                current_method = match.group(1)
+            
             # Dot Graph -------------------------------------------------------#
         fp.close()
     
@@ -95,6 +100,7 @@ class pycodeparser:
         print "from      :",self.tab_from
         print "functions :",self.functions
         print "classes   :",self.classes
+        print "methods   :",self.methods
 
 
 
