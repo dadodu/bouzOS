@@ -8,6 +8,29 @@
 # Version: 0.1
 #
 
+"""
+    pycodeparser{   'file1':{
+                        'import': {...},
+                        'from': {...},
+                        'classes':{
+                            'class_1':{
+                                'inheritance': {'...'},
+                                'attributs': {'...'},
+                                'methods':{
+                                    'method_1': {'dependancies ...'}
+                                    'method_2': {'...'}
+                                }
+                            },
+                            'class_2': {...}
+                        },
+                        'functions':{
+                            'funct_1': {'dependencies ...'}
+                            'funct_2': {...}
+                        },
+                    },
+                    'file2': {...}
+                }
+"""
 
 import sys, os, re
 import getopt
@@ -131,7 +154,7 @@ def main ():
 
 #- Functions ------------------------------------------------------------------#
 def usage():
-    print "usage: pycodeparser.py [-h] [-i] input_file.py"
+    print "usage: pycodeparser.py [-h] [-i <input_file.py>]"
 
 #------------------------------------------------------------------------------#
 if __name__=='__main__':
