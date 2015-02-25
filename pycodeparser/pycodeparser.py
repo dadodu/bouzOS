@@ -39,8 +39,8 @@ import getopt
 #- Classes --------------------------------------------------------------------#
 class pycodeparser:
     # Initiate some variables ...
-    def __init__(self,file):
-        self.file = file
+    def __init__(self,filename):
+        self.filename = filename
         self.tab_import = []
         self.tab_from   = []
         self.tab_path   = []
@@ -48,6 +48,7 @@ class pycodeparser:
         self.methods    = {}
         self.classes    = {}
         self.dot = []
+        self.dico_all = NestedDict()
         
         self.parser_fichier()
         
@@ -58,7 +59,7 @@ class pycodeparser:
         current_funct = None
         current_method = None
         try:
-            fp = open(self.file, 'r')
+            fp = open(self.filename, 'r')
         except:
             return
         
@@ -71,6 +72,7 @@ class pycodeparser:
             if re.match(r"^import", line):
                 for m in re.finditer(r"[, ]?([^,\n ]+)[, ]?", line[6:]):
                     self.tab_import.append(m.group(1))
+                    self.dico_all[self.filename]
             # From ------------------------------------------------------------#
             match = re.match(r"^from ([^ ]+) import", line)
             if match:
@@ -126,7 +128,14 @@ class pycodeparser:
         print "methods   :",self.methods
 
 
-
+class NestedDict(dict):
+    """Implementation of Nested Dictionary feature."""
+    def __getitem__(self, item):
+        try:
+            return dict.__getitem__(self, item)
+        except KeyError:
+            value = self[item] = type(self)()
+            return value
 
 #- Main Program ---------------------------------------------------------------#
 def main ():
@@ -136,25 +145,42 @@ def main ():
         print str(err)
         usage()
         sys.exit(2)
-    input = None
+    input_data = None
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
             sys.exit()
         elif opt in ("-i", "--input"):
-            input = arg
+            input_data = arg
         else:
             assert False, "unhandled option"
-    if input is None:
+    if input_data is None:
         usage()
         sys.exit()
     else:
-        pycodeparser(input)
+        pycodeparser(input_data)
     
-
+    print '\nTest of function Pretty_Display\n'
+    
+    d = NestedDict()
+    d['test']
+    d['test']['yo']
+    d['test']['ya']
+    d['The Game']['yu']['my hands are typing words']
+    Pretty_Display(d)
 #- Functions ------------------------------------------------------------------#
 def usage():
     print "usage: pycodeparser.py [-h] [-i <input_file.py>]"
+
+def Pretty_Display(d , indent = 0):
+    """ Displaying nested dictionaries
+            
+    """
+    for key in d.iterkeys():
+        print '\t'*indent + str(key) + ':'
+        if isinstance(d[key], dict):
+            Pretty_Display(d[key], indent+1)
+
 
 #------------------------------------------------------------------------------#
 if __name__=='__main__':
