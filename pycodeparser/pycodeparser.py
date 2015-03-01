@@ -103,10 +103,11 @@ class pycodeparser:
             # Functions -------------------------------------------------------#
             match = re.match(r"^def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
+                
                 try:
-                    self.functions.update({match.group(1):match.group(2)})
+                    self.dico_all[self.filename]['functions'][match.group(1)] = match.group(2)
                 except:
-                    self.functions.update({match.group(1):''})
+                    self.dico_all[self.filename]['functions'][match.group(1)] = ''
                 
                 current_funct = match.group(1)
             # Class methods ---------------------------------------------------#
