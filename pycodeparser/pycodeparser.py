@@ -50,9 +50,17 @@ class pycodeparser:
         self.dot = []
         self.dico_all = NestedDict()
         
+        self.init_dico()        
+        
         self.parser_fichier()
         
         self.print_dico()
+    
+    def init_dico(self):
+        self.dico_all[self.filename]['import']
+        self.dico_all[self.filename]['from']
+        self.dico_all[self.filename]['classes']
+        self.dico_all[self.filename]['functions']
     
     def parser_fichier(self):
         current_class = None
@@ -104,12 +112,12 @@ class pycodeparser:
             # Class methods ---------------------------------------------------#
             match = re.match(r"^[ \t]+def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
+                d = self.dico_all[self.filename]['classes'][current_class][match.group(1)]
                 if current_class is None:
                     print "Gros fail !"
                 
                 if self.methods.has_key(current_class):
-                    tmp = self.methods[current_class]
-                    tmp.append(match.group(1))
+                   self.methods[current_class].append(match.group(1))
                 else:
                     tmp = [match.group(1)]
                 
@@ -137,8 +145,22 @@ class NestedDict(dict):
             value = self[item] = type(self)()
             return value
 
+
+#- Functions ------------------------------------------------------------------#
+def usage():
+    print "usage: pycodeparser.py [-h] [-i <input_file.py>]"
+
+def Pretty_Display(d , indent = 0):
+    """ Displaying nested dictionaries
+            
+    """
+    for key in d.iterkeys():
+        print '\t'*indent + str(key) + ':'
+        if isinstance(d[key], dict):
+            Pretty_Display(d[key], indent+1)
+
 #- Main Program ---------------------------------------------------------------#
-def main ():
+if __name__=='__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:], "i:h", ["input=", "help"])
     except getopt.GetoptError as err:
@@ -168,21 +190,7 @@ def main ():
     d['test']['ya']
     d['The Game']['yu']['my hands are typing words']
     Pretty_Display(d)
-#- Functions ------------------------------------------------------------------#
-def usage():
-    print "usage: pycodeparser.py [-h] [-i <input_file.py>]"
-
-def Pretty_Display(d , indent = 0):
-    """ Displaying nested dictionaries
-            
-    """
-    for key in d.iterkeys():
-        print '\t'*indent + str(key) + ':'
-        if isinstance(d[key], dict):
-            Pretty_Display(d[key], indent+1)
-
-
 #------------------------------------------------------------------------------#
-if __name__=='__main__':
-    main()
+
+
 #------------------------------------------------------------------------------#
