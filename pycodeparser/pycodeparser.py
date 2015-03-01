@@ -40,7 +40,7 @@ import getopt
 class pycodeparser:
     # Initiate some variables ...
     def __init__(self,filename):
-        self.filename = filename
+        self.filenamename = filename
         self.tab_import = []
         self.tab_from   = []
         self.tab_path   = []
@@ -57,17 +57,17 @@ class pycodeparser:
         self.print_dico()
     
     def init_dico(self):
-        self.dico_all[self.filename]['import']
-        self.dico_all[self.filename]['from']
-        self.dico_all[self.filename]['classes']
-        self.dico_all[self.filename]['functions']
+        self.dico_all[self.filenamename]['import']
+        self.dico_all[self.filenamename]['from']
+        self.dico_all[self.filenamename]['classes']
+        self.dico_all[self.filenamename]['functions']
     
     def parser_fichier(self):
         current_class = None
         current_funct = None
         current_method = None
         try:
-            fp = open(self.filename, 'r')
+            fp = open(self.filenamename, 'r')
         except:
             return
         
@@ -80,40 +80,57 @@ class pycodeparser:
             if re.match(r"^import", line):
                 for m in re.finditer(r"[, ]?([^,\n ]+)[, ]?", line[6:]):
                     self.tab_import.append(m.group(1))
-                    self.dico_all[self.filename]
+                    self.dico_all[self.filenamename]
             # From ------------------------------------------------------------#
             match = re.match(r"^from ([^ ]+) import", line)
             if match:
                 self.tab_from.append(match.group(1))
                 for p in self.tab_path:
                     if p[-1] == '/':
-                        self.file = p+match.group(1)+".py"
+                        self.filename = p+match.group(1)+".py"
                     else:
-                        self.file = p+'/'+match.group(1)+".py"
+                        self.filename = p+'/'+match.group(1)+".py"
                     self.parser_fichier()
             # Classes ---------------------------------------------------------#
             match = re.match(r"^class ([^\(: ]+)\(?([^\)]*)\)?:+", line)
             if match:
+                current_class = match.group(1)
+                
                 try:
                     self.classes.update({match.group(1):match.group(2)})
+                    print '-->',match.group(1)
+                    self.dico_all[self.filenamename]['classes'][current_class]['inheritance'] = match.group(2)
                 except:
                     self.classes.update({match.group(1):''})
+                    self.dico_all[self.filenamename]['classes'][current_class]['inheritance'][match.group(2)]
                 
-                current_class = match.group(1)
             # Functions -------------------------------------------------------#
             match = re.match(r"^def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
                 
                 try:
-                    self.dico_all[self.filename]['functions'][match.group(1)] = match.group(2)
+                    self.dico_all[self.filenamename]['functions'][match.group(1)] = match.group(2)
+                    self.functions.update({match.group(1):match.group(2)})
+                    
                 except:
-                    self.dico_all[self.filename]['functions'][match.group(1)] = ''
+                    self.functions.update({match.group(1):''})
                 
                 current_funct = match.group(1)
             # Class methods ---------------------------------------------------#
             match = re.match(r"^[ \t]+def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
-                self.dico_all[self.filename]['classes'][current_class][match.group(1)]
+                self.dico_all[self.filenamename]['classes'][current_class]['methods'][match.group(1)]
+                
+                if current_class is None:
+                    print "Gros fail !"
+                
+                if self.methods.has_key(current_class):
+                   self.methods[current_class].append(match.group(1))
+                else:
+                    tmp = [match.group(1)]
+                
+                self.methods.update({current_class:tmp})
+                current_method = match.group(1)
             
             # Dot Graph -------------------------------------------------------#
         fp.close()
@@ -145,10 +162,12 @@ def Pretty_Display(d , indent = 0):
     """ Displaying nested dictionaries
             
     """
-    for key in d.iterkeys():
+    for key, value in d.iteritems():
         print '\t'*indent + str(key) + ':'
         if isinstance(d[key], dict):
             Pretty_Display(d[key], indent+1)
+        else:
+            print '\t'*(indent+1) + str(value)
 
 #- Main Program ---------------------------------------------------------------#
 if __name__=='__main__':
