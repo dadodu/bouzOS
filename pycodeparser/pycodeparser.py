@@ -34,13 +34,13 @@
 
 import sys, os, re
 import getopt
-
+from PyQt4 import QtGui #for test
 
 #- Classes --------------------------------------------------------------------#
 class pycodeparser:
     # Initiate some variables ...
     def __init__(self,filename):
-        self.filenamename = filename
+        self.filename = filename
         self.tab_import = []
         self.tab_from   = []
         self.tab_path   = []
@@ -57,17 +57,17 @@ class pycodeparser:
         self.print_dico()
     
     def init_dico(self):
-        self.dico_all[self.filenamename]['import']
-        self.dico_all[self.filenamename]['from']
-        self.dico_all[self.filenamename]['classes']
-        self.dico_all[self.filenamename]['functions']
+        self.dico_all[self.filename]['import']
+        self.dico_all[self.filename]['from']
+        self.dico_all[self.filename]['classes']
+        self.dico_all[self.filename]['functions']
     
     def parser_fichier(self):
         current_class = None
         current_funct = None
         current_method = None
         try:
-            fp = open(self.filenamename, 'r')
+            fp = open(self.filename, 'r')
         except:
             return
         
@@ -80,10 +80,12 @@ class pycodeparser:
             if re.match(r"^import", line):
                 for m in re.finditer(r"[, ]?([^,\n ]+)[, ]?", line[6:]):
                     self.tab_import.append(m.group(1))
-                    self.dico_all[self.filenamename]
+                    self.dico_all[self.filename]['import'] = self.tab_import
             # From ------------------------------------------------------------#
             match = re.match(r"^from ([^ ]+) import", line)
             if match:
+                self.dico_all[self.filename]['from'] = match.group(1)
+                
                 self.tab_from.append(match.group(1))
                 for p in self.tab_path:
                     if p[-1] == '/':
@@ -99,17 +101,19 @@ class pycodeparser:
                 try:
                     self.classes.update({match.group(1):match.group(2)})
                     print '-->',match.group(1)
-                    self.dico_all[self.filenamename]['classes'][current_class]['inheritance'] = match.group(2)
+                    if match.group(2):
+                        self.dico_all[self.filename]['classes'][current_class]['inheritance'] = match.group(2)
+                        
                 except:
                     self.classes.update({match.group(1):''})
-                    self.dico_all[self.filenamename]['classes'][current_class]['inheritance'][match.group(2)]
+                    self.dico_all[self.filename]['classes'][current_class]['inheritance'][match.group(2)]
                 
             # Functions -------------------------------------------------------#
             match = re.match(r"^def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
                 
                 try:
-                    self.dico_all[self.filenamename]['functions'][match.group(1)] = match.group(2)
+                    self.dico_all[self.filename]['functions'][match.group(1)] = match.group(2)
                     self.functions.update({match.group(1):match.group(2)})
                     
                 except:
@@ -119,7 +123,7 @@ class pycodeparser:
             # Class methods ---------------------------------------------------#
             match = re.match(r"^[ \t]+def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
-                self.dico_all[self.filenamename]['classes'][current_class]['methods'][match.group(1)]
+                self.dico_all[self.filename]['classes'][current_class]['methods'][match.group(1)]
                 
                 if current_class is None:
                     print "Gros fail !"
