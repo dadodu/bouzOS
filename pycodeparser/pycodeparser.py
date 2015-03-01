@@ -112,17 +112,7 @@ class pycodeparser:
             # Class methods ---------------------------------------------------#
             match = re.match(r"^[ \t]+def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
-                d = self.dico_all[self.filename]['classes'][current_class][match.group(1)]
-                if current_class is None:
-                    print "Gros fail !"
-                
-                if self.methods.has_key(current_class):
-                   self.methods[current_class].append(match.group(1))
-                else:
-                    tmp = [match.group(1)]
-                
-                self.methods.update({current_class:tmp})
-                current_method = match.group(1)
+                self.dico_all[self.filename]['classes'][current_class][match.group(1)]
             
             # Dot Graph -------------------------------------------------------#
         fp.close()
@@ -180,7 +170,7 @@ if __name__=='__main__':
         usage()
         sys.exit()
     else:
-        pycodeparser(input_data)
+        a = pycodeparser(input_data)
     
     print '\nTest of function Pretty_Display\n'
     
@@ -189,7 +179,7 @@ if __name__=='__main__':
     d['test']['yo']
     d['test']['ya']
     d['The Game']['yu']['my hands are typing words']
-    Pretty_Display(d)
+    Pretty_Display(a.dico_all)
 #------------------------------------------------------------------------------#
 
 
