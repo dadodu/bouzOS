@@ -138,6 +138,7 @@ class pycodeparser:
             
             # Dot Graph -------------------------------------------------------#
         fp.close()
+        self.dico_all.print_dico()
     
     def print_dico(self):
         print "path      :",self.tab_path
@@ -149,32 +150,50 @@ class pycodeparser:
 
 
 class NestedDict(dict):
-    """Implementation of Nested Dictionary feature."""
+    """ Implementation of Nested Dictionary feature.
+        >>>
+    
+    """
     def __getitem__(self, item):
         try:
             return dict.__getitem__(self, item)
         except KeyError:
             value = self[item] = type(self)()
             return value
+            
+    def print_dico(self,indent = 0):
+        """ Displaying nested dictionaries
+        
+            >>> d = NestedDict()
+            >>> d['test']
+            {}
+            >>> d['test']['yo']
+            {}
+            >>> d['test']['ya']
+            {}
+            >>> d['The Game']['yu']['my hands are typing words'] = 'end'
+            
+
+        """
+        for key, value in self.iteritems():
+            print '\t'*indent + str(key) + ' :'
+            if isinstance(value, type(self)):
+                value.print_dico(indent + 1)
+            else:
+                print '\t'*(indent+1) + str(value)
 
 
 #- Functions ------------------------------------------------------------------#
 def usage():
     print "usage: pycodeparser.py [-h] [-i <input_file.py>]"
 
-def Pretty_Display(d , indent = 0):
-    """ Displaying nested dictionaries
-            
-    """
-    for key, value in d.iteritems():
-        print '\t'*indent + str(key) + ':'
-        if isinstance(d[key], dict):
-            Pretty_Display(d[key], indent+1)
-        else:
-            print '\t'*(indent+1) + str(value)
+
 
 #- Main Program ---------------------------------------------------------------#
 if __name__=='__main__':
+    import doctest
+    doctest.testmod()
+    
     try:
         opts, args = getopt.getopt(sys.argv[1:], "i:h", ["input=", "help"])
     except getopt.GetoptError as err:
@@ -196,14 +215,7 @@ if __name__=='__main__':
     else:
         a = pycodeparser(input_data)
     
-    print '\nTest of function Pretty_Display\n'
     
-    d = NestedDict()
-    d['test']
-    d['test']['yo']
-    d['test']['ya']
-    d['The Game']['yu']['my hands are typing words']
-    Pretty_Display(a.dico_all)
 #------------------------------------------------------------------------------#
 
 
