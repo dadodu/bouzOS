@@ -138,7 +138,7 @@ class pycodeparser:
             
             # Dot Graph -------------------------------------------------------#
         fp.close()
-        self.dico_all.print_dico()
+#        self.dico_all.print_dico()
     
     def print_dico(self):
         print "path      :",self.tab_path
@@ -151,7 +151,7 @@ class pycodeparser:
 
 class NestedDict(dict):
     """ Implementation of Nested Dictionary feature.
-        >>>
+        
     
     """
     def __getitem__(self, item):
