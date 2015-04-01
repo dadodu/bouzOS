@@ -1,6 +1,5 @@
 #!/bin/bash
 pocketsphinx_continuous \
-#    -hmm /usr/share/pocketsphinx/model/hmm/fr_FR/french_f2
     -hmm /usr/share/pocketsphinx/model/hmm/fr_FR/french_f0 \
     -dict /usr/share/pocketsphinx/model/lm/fr_FR/frenchWords62K.dic \
     -lm /usr/share/pocketsphinx/model/lm/fr_FR/french3g62K.lm.dmp \

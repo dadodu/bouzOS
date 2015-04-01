@@ -1,2 +1,1 @@
-Ma voix est synthétisée grace a un nouvel algorithme 
-de synthèse, appelé MBROLA.
+Alfred mets de la musique s'il te plait.
