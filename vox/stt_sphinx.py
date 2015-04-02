@@ -20,6 +20,9 @@ dictd  = "/usr/share/pocketsphinx/model/lm/fr_FR/frenchWords62K.dic"
 """
 def decodeSpeech(wavfile):
     
+    """
+        optimisation : http://cmusphinx.sourceforge.net/wiki/pocketsphinxhandhelds
+    """
     speechRec = ps.Decoder(hmm = hmdir, lm = lmd, dict = dictd, logfn = "/dev/null")
     f_wavfile = file(wavfile,'rb')
     f_wavfile.seek(44)
