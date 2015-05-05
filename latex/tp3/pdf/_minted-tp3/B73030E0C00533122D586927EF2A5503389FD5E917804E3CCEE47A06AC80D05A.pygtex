@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+no}{CODE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{1000}
+\PYGdefault{n+no}{DATA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{2000}
+\PYGdefault{n+no}{VALEUR}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{3000}
+\PYGdefault{n+no}{PRINTF}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{EE88}
+\PYGdefault{n+no}{OUT2HEX}\PYGdefault{k+kd}{	EQU}	
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{DATA}
+\PYGdefault{n+nf}{VAR}	\PYGdefault{n+nv}{DC.B}	\PYGdefault{l+s}{\PYGdefaultZsq{}Valeur : \PYGdefaultZpc{}d\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{10}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{0}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{CODE}
+	\PYGdefault{n+nf}{CLRA}		\PYGdefault{c+c1}{;On clear A parce qu\PYGdefaultZsq{}on veut uniquement la valeur de}
+			\PYGdefault{c+c1}{;\PYGdefaultZdl{}3000 et printf prend des mots en argument}
+	\PYGdefault{n+nf}{LDAB}	\PYGdefault{n+nv}{VALEUR}	\PYGdefault{c+c1}{;On charge B avec la valeur voulue en \PYGdefaultZdl{}3000}
+	\PYGdefault{n+nf}{PSHD}		\PYGdefault{c+c1}{;On passe la valeur totale en paramètre par la pile}
+	\PYGdefault{n+nf}{LDD}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{n+nv}{VAR}	\PYGdefault{c+c1}{;On charge la chaine de caractère pour le printf}
+	\PYGdefault{n+nf}{JSR}	\PYGdefault{p}{[}\PYGdefault{n+nv}{PRINTF}\PYGdefault{p}{,}\PYGdefault{n+nv}{PCR}\PYGdefault{p}{]}	\PYGdefault{c+c1}{;On effectue le printf}
+	\PYGdefault{n+nf}{PULD}		\PYGdefault{c+c1}{;On récupère notre valeur.}
+
+	
+	
+	\PYGdefault{n+nf}{SWI}
+\end{Verbatim}

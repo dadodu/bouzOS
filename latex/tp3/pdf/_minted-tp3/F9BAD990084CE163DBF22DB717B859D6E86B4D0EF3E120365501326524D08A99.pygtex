@@ -1,0 +1,62 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+no}{CODE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{1000}
+\PYGdefault{n+no}{DATA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{2000}
+\PYGdefault{n+no}{GETCHAR}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{EE84}
+\PYGdefault{n+no}{PUTCHAR}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{EE86}
+\PYGdefault{n+no}{SCI0SR1}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{CC}
+\PYGdefault{n+no}{SCI0DRL}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{CF}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{DATA}
+\PYGdefault{n+nf}{VAR}	\PYGdefault{n+nb}{DS}\PYGdefault{n+nv}{.B}	\PYGdefault{l+m+mi}{1}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{CODE}
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{02}	\PYGdefault{c+c1}{;On charge la valeur 2 dans A pour la stocker}
+			\PYGdefault{c+c1}{;dans la mémoire}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{VAR}	\PYGdefault{c+c1}{;Il s\PYGdefaultZsq{}agit de la valeur de départ}
+	\PYGdefault{n+nf}{BSR}	\PYGdefault{n+nv}{SCRUT}	\PYGdefault{c+c1}{;On effectue la structation avec la fonction AUVOL}
+	\PYGdefault{n+nf}{SWI}
+
+\PYGdefault{n+nf}{SCRUT}	\PYGdefault{n+nv}{BSR}	\PYGdefault{n+nv}{AUVOL}
+	\PYGdefault{n+nf}{CMPB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{l+s}{\PYGdefaultZsq{}+\PYGdefaultZsq{}}	\PYGdefault{c+c1}{;Comme précédemment, on compare le caractère entré}
+	\PYGdefault{n+nf}{BEQ}	\PYGdefault{n+nv}{INCREM}	\PYGdefault{c+c1}{;Et on incrémente la variable}
+	\PYGdefault{n+nf}{CMPB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{l+s}{\PYGdefaultZsq{}\PYGdefaultZhy{}\PYGdefaultZsq{}}
+	\PYGdefault{n+nf}{BEQ}	\PYGdefault{n+nv}{DECREM}
+	\PYGdefault{n+nf}{CMPB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mb}{1B}
+	\PYGdefault{n+nf}{BEQ}	\PYGdefault{n+nv}{FIN}
+
+	\PYGdefault{n+nf}{LDAB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{l+s}{\PYGdefaultZsq{}I\PYGdefaultZsq{}}		\PYGdefault{c+c1}{;Caractère qui va clignoter}
+	\PYGdefault{n+nf}{JSR}	\PYGdefault{p}{[}\PYGdefault{n+nv}{PUTCHAR}\PYGdefault{p}{,}\PYGdefault{n+nv}{PCR}\PYGdefault{p}{]}	\PYGdefault{c+c1}{;On fait apparaitre le caractère}
+	\PYGdefault{n+nf}{BSR}	\PYGdefault{n+nv}{TEMPO}		\PYGdefault{c+c1}{;On attend}
+	\PYGdefault{n+nf}{LDAB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{08}		\PYGdefault{c+c1}{;On charge le caractère BACKSPACE}
+	\PYGdefault{n+nf}{JSR}	\PYGdefault{p}{[}\PYGdefault{n+nv}{PUTCHAR}\PYGdefault{p}{,}\PYGdefault{n+nv}{PCR}\PYGdefault{p}{]}	\PYGdefault{c+c1}{;On le fait apparaitre}
+	\PYGdefault{n+nf}{BSR}	\PYGdefault{n+nv}{TEMPO}		\PYGdefault{c+c1}{;On attend}
+
+	\PYGdefault{n+nf}{BRA}	\PYGdefault{n+nv}{SCRUT}		\PYGdefault{c+c1}{;Et on recommence indéfiniment}
+	\PYGdefault{n+nf}{RTS}
+	
+\PYGdefault{n+nf}{INCREM}	\PYGdefault{n+nv}{INC}	\PYGdefault{n+nv}{VAR}
+	\PYGdefault{n+nf}{BRA}	\PYGdefault{n+nv}{SCRUT}
+
+\PYGdefault{n+nf}{DECREM}	\PYGdefault{n+nv}{DEC}	\PYGdefault{n+nv}{VAR}
+	\PYGdefault{n+nf}{BRA}	\PYGdefault{n+nv}{SCRUT}
+	
+
+\PYGdefault{c+c1}{;*\PYGdefaultZhy{}\PYGdefaultZhy{} TEMPORISATION \PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}}
+\PYGdefault{n+nf}{TEMPO}	\PYGdefault{n+nv}{LDAA}	\PYGdefault{n+nv}{VAR}	\PYGdefault{c+c1}{;On commence la tempo}
+\PYGdefault{n+nf}{REC2}	\PYGdefault{n+nv}{LDY}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{FFFF}	\PYGdefault{c+c1}{;Tempo à 50 000}
+\PYGdefault{n+nf}{REC1}	\PYGdefault{n+nv}{DEY}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{REC1}
+	\PYGdefault{n+nf}{DECA}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{REC2}
+	\PYGdefault{n+nf}{NOP}		\PYGdefault{c+c1}{;Tempo fini}
+	\PYGdefault{n+nf}{RTS}
+\PYGdefault{c+c1}{;*\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}}
+
+\PYGdefault{n+nf}{AUVOL}	\PYGdefault{n+nv}{BRCLR}	\PYGdefault{n+nv}{SCI0SR1}\PYGdefault{p}{,}\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{20}\PYGdefault{p}{,}\PYGdefault{n+nv}{VIDE}
+	\PYGdefault{n+nf}{LDAB}	\PYGdefault{n+nv}{SCI0DRL}	\PYGdefault{c+c1}{;}
+	\PYGdefault{n+nf}{BRA}	\PYGdefault{n+nv}{FIN}
+
+\PYGdefault{n+nf}{VIDE}	\PYGdefault{n+nb}{CL}\PYGdefault{n+nv}{RB}
+
+\PYGdefault{n+nf}{FIN}	\PYGdefault{n+nv}{RTS}
+\end{Verbatim}

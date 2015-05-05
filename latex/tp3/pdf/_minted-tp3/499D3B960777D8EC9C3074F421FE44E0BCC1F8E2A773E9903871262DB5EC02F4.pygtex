@@ -1,0 +1,40 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+no}{CODE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{1000}
+\PYGdefault{n+no}{DATA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{2000}
+\PYGdefault{n+no}{PUTCHAR}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{EE86}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{DATA}
+\PYGdefault{n+nf}{CHAINE}	\PYGdefault{n+nv}{DC.B}	\PYGdefault{l+s}{\PYGdefaultZdq{}The Game\PYGdefaultZdq{}}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{10}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{0}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{CODE}
+	\PYGdefault{n+nf}{LDY}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{n+nb}{CH}\PYGdefault{n+nv}{AINE}	\PYGdefault{c+c1}{;On récupère l\PYGdefaultZsq{}adresse de la chaine}
+			\PYGdefault{c+c1}{;à afficher dans Y}
+	\PYGdefault{n+nf}{BSR}	\PYGdefault{n+nv}{AFFICH}	\PYGdefault{c+c1}{;On effectue l\PYGdefaultZsq{}affichage}
+	\PYGdefault{n+nf}{SWI}		\PYGdefault{c+c1}{;On arrête}
+
+
+\PYGdefault{n+nf}{AFFICH}	\PYGdefault{n+nv}{LDAB}	\PYGdefault{l+m+mi}{1}\PYGdefault{p}{,}\PYGdefault{n+nv}{Y}\PYGdefault{o}{+}	\PYGdefault{c+c1}{;On charge le premier caractère }
+			\PYGdefault{c+c1}{;dans le registre B}
+			
+	\PYGdefault{n+nf}{PSHY}		\PYGdefault{c+c1}{;On backup la valeur de Y dans la pile}
+			\PYGdefault{c+c1}{;pour éviter un écrasement}
+			
+	\PYGdefault{n+nf}{JSR}	\PYGdefault{n+nv}{TEMPO}	\PYGdefault{c+c1}{;On fait une tempo}
+	\PYGdefault{n+nf}{JSR}	\PYGdefault{p}{[}\PYGdefault{n+nv}{PUTCHAR}\PYGdefault{p}{,}\PYGdefault{n+nv}{PCR}\PYGdefault{p}{]}	\PYGdefault{c+c1}{;On affiche le premier caractère}
+				\PYGdefault{c+c1}{;situé dans B}
+				
+	\PYGdefault{n+nf}{PULY}		\PYGdefault{c+c1}{;On récupère l\PYGdefaultZsq{}adresse du prochain caractère dans Y}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{AFFICH}	\PYGdefault{c+c1}{;Si on n\PYGdefaultZsq{}obtient pas le caractère nul, on continue.}
+	\PYGdefault{n+nf}{RTS}		\PYGdefault{c+c1}{;fin de sous routine}
+
+\PYGdefault{c+c1}{;*\PYGdefaultZhy{}\PYGdefaultZhy{} TEMPORISATION \PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}}
+\PYGdefault{n+nf}{TEMPO}	\PYGdefault{n+nv}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{FA}	\PYGdefault{c+c1}{;On commence la tempo}
+\PYGdefault{n+nf}{REC2}	\PYGdefault{n+nv}{LDX}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0}\PYGdefault{n+nv}{FFF}	
+\PYGdefault{n+nf}{REC1}	\PYGdefault{n+nv}{DEX}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{REC1}
+	\PYGdefault{n+nf}{DECA}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{REC2}
+	\PYGdefault{n+nf}{NOP}		\PYGdefault{c+c1}{;Tempo fini}
+	\PYGdefault{n+nf}{RTS}
+\PYGdefault{c+c1}{;*\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}}
+\end{Verbatim}

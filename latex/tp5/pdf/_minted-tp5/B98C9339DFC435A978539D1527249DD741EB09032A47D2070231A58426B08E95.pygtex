@@ -1,0 +1,57 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+no}{CODE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{1000}
+\PYGdefault{n+no}{DATA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{2000}
+\PYGdefault{n+no}{TIOS}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0040}
+\PYGdefault{n+no}{TSCR1}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0046}
+\PYGdefault{n+no}{TSCR2}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{004}\PYGdefault{n+nv}{D}
+\PYGdefault{n+no}{TCTL1}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0048}
+\PYGdefault{n+no}{TCTL2}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0049}
+\PYGdefault{n+no}{TCTL3}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{004}\PYGdefault{n+nv}{A}
+\PYGdefault{n+no}{TCTL4}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{004}\PYGdefault{n+nv}{B}
+\PYGdefault{n+no}{TFLG1}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{004}\PYGdefault{n+nv}{E}
+\PYGdefault{n+no}{TC0}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0050}
+\PYGdefault{n+no}{TC1}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0052}
+
+\PYGdefault{n+no}{PORTB}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0001}
+\PYGdefault{n+no}{DDRB}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0003}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{DATA}
+\PYGdefault{n+nf}{VAR}	\PYGdefault{n+nb}{DS}\PYGdefault{n+nv}{.W}	\PYGdefault{l+m+mi}{1}
+\PYGdefault{n+nf}{CMPT}	\PYGdefault{n+nb}{DS}\PYGdefault{n+nv}{.W}	\PYGdefault{l+m+mi}{1}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{CODE}
+
+\PYGdefault{n+nf}{INIT}	\PYGdefault{n+nv}{LDD}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0000}
+	\PYGdefault{n+nf}{STD}	\PYGdefault{n+nv}{VAR}
+
+\PYGdefault{n+nf}{INIT\PYGdefaultZus{}TIMER}	\PYGdefault{n+nv}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{80}	\PYGdefault{c+c1}{;On initialise le timer}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{TSCR1}	\PYGdefault{c+c1}{;On met TEN à 1}
+	
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{07}	\PYGdefault{c+c1}{;}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{TSCR2}	\PYGdefault{c+c1}{;On met le prédiviseur à 128}
+
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{00}	\PYGdefault{c+c1}{;}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{TIOS}	\PYGdefault{c+c1}{;On met tous les canaux en capture d\PYGdefaultZsq{}entrée}
+	
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0}\PYGdefault{n+nv}{A}	\PYGdefault{c+c1}{;}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{TCTL4}	\PYGdefault{c+c1}{;On met le trigger du timer sur front descendant}
+			\PYGdefault{c+c1}{;pour TC0 et TC1}
+
+\PYGdefault{n+nf}{BOUCLE}	\PYGdefault{n+nv}{LDAA}	\PYGdefault{n+nv}{TFLG1}	\PYGdefault{c+c1}{;On récupère les flags du timer}
+	\PYGdefault{n+nf}{ANDA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{03}	\PYGdefault{c+c1}{;On masque pour ne récupérer que TC0 et TC1}
+	\PYGdefault{n+nf}{CMPA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{03}	\PYGdefault{c+c1}{;On teste}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{BOUCLE}	\PYGdefault{c+c1}{;Si les deux ne sont pas levés, on recommence}
+	\PYGdefault{n+nf}{LDAB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{03}	\PYGdefault{c+c1}{;}
+	\PYGdefault{n+nf}{STAB}	\PYGdefault{n+nv}{TFLG1}	\PYGdefault{c+c1}{;Si ils sont levés, on les remets à 0 en passant 1}
+
+\PYGdefault{n+nf}{DIFF}	\PYGdefault{n+nv}{LDD}	\PYGdefault{n+nv}{TC1}	\PYGdefault{c+c1}{;On récupère le temps de fin (TC1)}
+	\PYGdefault{n+nf}{SUBD}	\PYGdefault{n+nv}{TC0}	\PYGdefault{c+c1}{;On le soustrait au temps de départ}
+	\PYGdefault{n+nf}{STD}	\PYGdefault{n+nv}{VAR}	\PYGdefault{c+c1}{;On stocke la différence dans la variable}
+	
+	\PYGdefault{n+nf}{LDX}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{03}\PYGdefault{n+nv}{E8}	\PYGdefault{c+c1}{;On divise par 1000 pour avoir les millisecondes.}
+	\PYGdefault{n+nf}{IDIV}
+	\PYGdefault{n+nf}{STX}	\PYGdefault{n+nv}{CMPT}
+
+	
+	\PYGdefault{n+nf}{SWI}
+\end{Verbatim}

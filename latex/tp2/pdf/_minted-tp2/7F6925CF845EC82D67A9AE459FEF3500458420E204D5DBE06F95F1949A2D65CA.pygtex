@@ -1,0 +1,29 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+no}{CODE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{1000}
+\PYGdefault{n+no}{DATA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{2000}
+\PYGdefault{n+no}{DDRB}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0003}
+\PYGdefault{n+no}{PORTB}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0001}
+\PYGdefault{n+no}{DDRA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0002}
+\PYGdefault{n+no}{PORTA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0000}
+\PYGdefault{n+no}{SORTIE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{FF}
+\PYGdefault{n+no}{ENTREE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{00}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{DATA}
+
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{CODE}
+	
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{n+nv}{SORTIE}	\PYGdefault{c+c1}{;On initialise le port B en sortie}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{DDRB}	\PYGdefault{c+c1}{;}
+
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{n+nv}{ENTREE}	\PYGdefault{c+c1}{;On initialise le port A en entrée}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{DDRA}	\PYGdefault{c+c1}{;}
+
+\PYGdefault{n+nf}{BOUCLE}	\PYGdefault{n+nv}{LDAA}	\PYGdefault{n+nv}{PORTA}	\PYGdefault{c+c1}{;On récupère le port A}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{PORTB}	\PYGdefault{c+c1}{;On le met dans le port B}
+
+	\PYGdefault{n+nf}{BRA}	\PYGdefault{n+nv}{BOUCLE}	\PYGdefault{c+c1}{;On recommence}
+
+
+	\PYGdefault{n+nf}{SWI}
+\end{Verbatim}

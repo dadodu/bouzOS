@@ -1,0 +1,36 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+no}{CODE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{1000}
+\PYGdefault{n+no}{DATA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{2000}
+\PYGdefault{n+no}{VALEUR}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{3000}
+\PYGdefault{n+no}{PRINTF}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{EE88}
+\PYGdefault{n+no}{GETCHAR}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{EE84}
+\PYGdefault{n+no}{PUTCHAR}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{EE86}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{DATA}
+\PYGdefault{n+nf}{AFF}	\PYGdefault{n+nv}{DC.B}	\PYGdefault{l+s}{\PYGdefaultZsq{}Valeur : \PYGdefaultZpc{}d\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{10}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{0}
+\PYGdefault{n+nf}{TABL}	\PYGdefault{n+nv}{DC.W}	\PYGdefault{n+nv}{PHRASE1}\PYGdefault{p}{,}\PYGdefault{n+nv}{PHRASE2}\PYGdefault{p}{,}\PYGdefault{n+nv}{PHRASE3}\PYGdefault{p}{,}\PYGdefault{n+nv}{DEFAULT}
+\PYGdefault{n+nf}{PHRASE1}	\PYGdefault{n+nv}{DC.B}	\PYGdefault{l+s}{\PYGdefaultZsq{}Salut\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{10}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{0}
+\PYGdefault{n+nf}{PHRASE2} \PYGdefault{n+nv}{DC.B}	\PYGdefault{l+s}{\PYGdefaultZsq{}cest\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{10}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{0}
+\PYGdefault{n+nf}{PHRASE3}	\PYGdefault{n+nv}{DC.B}	\PYGdefault{l+s}{\PYGdefaultZsq{}cool\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{10}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{0}
+\PYGdefault{n+nf}{DEFAULT} \PYGdefault{n+nv}{DC.B}	\PYGdefault{l+s}{\PYGdefaultZsq{}NON\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{10}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{0}
+
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{CODE}
+	\PYGdefault{n+nf}{LDX}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{n+nv}{TABL}
+	\PYGdefault{n+nf}{CLRA}
+	\PYGdefault{n+nf}{PSHX}
+	\PYGdefault{n+nf}{JSR}	\PYGdefault{p}{[}\PYGdefault{n+nv}{GETCHAR}\PYGdefault{p}{,}\PYGdefault{n+nv}{PCR}\PYGdefault{p}{]}
+	\PYGdefault{n+nf}{SUBB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{2}\PYGdefault{n+nv}{F}
+	\PYGdefault{n+nf}{PULX}
+	\PYGdefault{n+nf}{ASLB}
+	\PYGdefault{n+nf}{ABX}	
+	
+	\PYGdefault{n+nf}{LDAB}	\PYGdefault{l+m+mi}{0}\PYGdefault{p}{,}\PYGdefault{n+nv}{X}
+
+	\PYGdefault{n+nf}{PSHX}
+\PYGdefault{n+nf}{AFFICH}	\PYGdefault{n+nv}{JSR}	\PYGdefault{p}{[}\PYGdefault{n+nv}{PUTCHAR}\PYGdefault{p}{,}\PYGdefault{n+nv}{PCR}\PYGdefault{p}{]}
+	\PYGdefault{n+nf}{PULX}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{AFFICH}
+
+	\PYGdefault{n+nf}{SWI}
+\end{Verbatim}

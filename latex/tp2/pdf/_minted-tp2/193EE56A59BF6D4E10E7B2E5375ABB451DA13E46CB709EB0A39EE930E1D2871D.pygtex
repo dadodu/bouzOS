@@ -1,0 +1,41 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+no}{CODE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{1000}
+\PYGdefault{n+no}{DATA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{2000}
+\PYGdefault{n+no}{DDRB}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0003}
+\PYGdefault{n+no}{PORTB}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0001}
+\PYGdefault{n+no}{DDRA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0002}
+\PYGdefault{n+no}{PORTA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0000}
+\PYGdefault{n+no}{SORTIE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{FF}
+\PYGdefault{n+no}{ENTREE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{00}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{DATA}
+\PYGdefault{n+nf}{DEPART}	\PYGdefault{n+nv}{DC.B}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{7}\PYGdefault{n+nv}{F}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{CODE}
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{n+nv}{SORTIE}	\PYGdefault{c+c1}{;On initialise le port B en sortie}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{DDRB}	\PYGdefault{c+c1}{;}
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{n+nv}{DEPART}	\PYGdefault{c+c1}{;On récupère la valeur de départ dans A}
+	\PYGdefault{n+nf}{SEC}		\PYGdefault{c+c1}{;On initialise la carry à 1 pour éviter d\PYGdefaultZsq{}avoir}
+			\PYGdefault{c+c1}{;une double barre dans le chenillard}
+
+\PYGdefault{n+nf}{BOUCLE}	\PYGdefault{n+nv}{STAA}	\PYGdefault{n+nv}{PORTB}	\PYGdefault{c+c1}{;On affiche ce qui est dans A}
+	\PYGdefault{n+nf}{RORA}		\PYGdefault{c+c1}{;On rotationne vers la droite A}
+
+	\PYGdefault{n+nf}{BSR}	\PYGdefault{n+nv}{TEMPO}	\PYGdefault{c+c1}{;On temporise}
+
+	\PYGdefault{n+nf}{BRA}	\PYGdefault{n+nv}{BOUCLE}	\PYGdefault{c+c1}{;Et on recommence}
+
+	\PYGdefault{n+nf}{SWI}
+
+
+\PYGdefault{c+c1}{;*\PYGdefaultZhy{}\PYGdefaultZhy{} TEMPORISATION \PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}}
+\PYGdefault{n+nf}{TEMPO}	\PYGdefault{n+nv}{LDAB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{FA}	\PYGdefault{c+c1}{;On commence la tempo}
+\PYGdefault{n+nf}{REC2}	\PYGdefault{n+nv}{LDY}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0}\PYGdefault{n+nv}{FFF}	\PYGdefault{c+c1}{;Tempo à 50 000}
+\PYGdefault{n+nf}{REC1}	\PYGdefault{n+nv}{DEY}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{REC1}
+	\PYGdefault{n+nf}{DECB}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{REC2}
+	\PYGdefault{n+nf}{NOP}		\PYGdefault{c+c1}{;Tempo fini}
+	\PYGdefault{n+nf}{RTS}
+\PYGdefault{c+c1}{;*\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}}
+\end{Verbatim}

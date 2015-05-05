@@ -1,0 +1,65 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+no}{CODE}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{1000}
+\PYGdefault{n+no}{DATA}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{2000}
+\PYGdefault{n+no}{PTH}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0260}
+\PYGdefault{n+no}{DDRH}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0262}
+\PYGdefault{n+no}{PERH}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0264}
+\PYGdefault{n+no}{PPSH}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0265}
+\PYGdefault{n+no}{PIEH}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0266}
+\PYGdefault{n+no}{PIFH}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0267}
+\PYGdefault{n+no}{PORTB}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0001}
+\PYGdefault{n+no}{DDRB}\PYGdefault{k+kd}{	EQU}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{0003}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{DATA}
+\PYGdefault{n+nf}{COMPT}	\PYGdefault{n+nb}{DS}\PYGdefault{n+nv}{.B}	\PYGdefault{l+m+mi}{1}
+
+	\PYGdefault{k}{ORG}	\PYGdefault{n+nv}{CODE}
+\PYGdefault{n+nf}{INIT}	\PYGdefault{n+nv}{SEI}		\PYGdefault{c+c1}{;On masque l\PYGdefaultZsq{}interruption}
+			\PYGdefault{c+c1}{;Initialisation des paramètres}
+	\PYGdefault{n+nf}{LDD}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{n+nv}{IT}	\PYGdefault{c+c1}{;On charge l\PYGdefaultZsq{}adresse de l\PYGdefaultZsq{}interruption}
+	\PYGdefault{n+nf}{STD}	\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{3}\PYGdefault{n+nv}{E4C}	\PYGdefault{c+c1}{;Pour la stocker dans le vecteur d\PYGdefaultZsq{}interruption}
+			\PYGdefault{c+c1}{;du port H}
+
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{FF}	\PYGdefault{c+c1}{;On charge \PYGdefaultZdl{}FF}
+	\PYGdefault{n+nf}{LDAB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{00}	\PYGdefault{c+c1}{;On charge \PYGdefaultZdl{}00}
+
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{PERH}	\PYGdefault{c+c1}{;On active tout le port H}
+	\PYGdefault{n+nf}{STAB}	\PYGdefault{n+nv}{PPSH}	\PYGdefault{c+c1}{;On met le port H en pull up et fronts descendants}
+	\PYGdefault{n+nf}{STAB}	\PYGdefault{n+nv}{DDRH}	\PYGdefault{c+c1}{;On met tout le port H en entrée}
+
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{PIEH}	\PYGdefault{c+c1}{;On valide les interruptions sur tous les pins du}
+			\PYGdefault{c+c1}{;port H.}
+	
+	\PYGdefault{n+nf}{CLI}		\PYGdefault{c+c1}{;On enlève le masque de l\PYGdefaultZsq{}interruption.}
+
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{DDRB}	\PYGdefault{c+c1}{;On active les LEDs en sortie (debug)}
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{00}	\PYGdefault{c+c1}{;}
+	
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{COMPT}	\PYGdefault{c+c1}{;On met le compteur à 0.}
+
+\PYGdefault{n+nf}{BOUCLE}	\PYGdefault{n+nv}{LDAB}	\PYGdefault{n+nv}{COMPT}	\PYGdefault{c+c1}{;On récupère la valeur du compteur}
+	\PYGdefault{n+nf}{COMB}		\PYGdefault{c+c1}{;On l\PYGdefaultZsq{}inverse}
+	\PYGdefault{n+nf}{STAB}	\PYGdefault{n+nv}{PORTB}	\PYGdefault{c+c1}{;On l\PYGdefaultZsq{}affiche avec les LEDs}
+	\PYGdefault{n+nf}{COMB}		\PYGdefault{c+c1}{;On le réinverse}
+	\PYGdefault{n+nf}{CMPB}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{05}	\PYGdefault{c+c1}{;Si on est à 5, on arrête (debug)}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{BOUCLE}	\PYGdefault{c+c1}{;On reboucle.}
+
+	\PYGdefault{n+nf}{SWI}
+
+\PYGdefault{n+nf}{IT}	\PYGdefault{n+nv}{INC}	\PYGdefault{n+nv}{COMPT}	\PYGdefault{c+c1}{;On incrémente le compteur }
+	\PYGdefault{n+nf}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{FF}
+	\PYGdefault{n+nf}{STAA}	\PYGdefault{n+nv}{PIFH}	\PYGdefault{c+c1}{;On remet les flags d\PYGdefaultZsq{}interruption à 0}
+	\PYGdefault{n+nf}{BRA}	\PYGdefault{n+nv}{TEMPO}	\PYGdefault{c+c1}{;On temporise}
+\PYGdefault{n+nf}{FIN\PYGdefaultZus{}IT}	\PYGdefault{n+nv}{RTI}		\PYGdefault{c+c1}{;On retourne dans le programme principal.}
+
+\PYGdefault{c+c1}{;*\PYGdefaultZhy{}\PYGdefaultZhy{} TEMPORISATION \PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}}
+\PYGdefault{n+nf}{TEMPO}	\PYGdefault{n+nv}{LDAA}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{n+nv}{FA}	\PYGdefault{c+c1}{;Temporisation logicielle de durée grossière.}
+\PYGdefault{n+nf}{REC2}	\PYGdefault{n+nv}{LDX}	\PYGdefault{err}{\PYGdefaultZsh{}}\PYGdefault{k+kc}{\PYGdefaultZdl{}}\PYGdefault{l+m+mi}{03}\PYGdefault{n+nv}{E7}	\PYGdefault{c+c1}{;Fait \PYGdefaultZdq{}à l\PYGdefaultZsq{}oeil\PYGdefaultZdq{}}
+\PYGdefault{n+nf}{REC1}	\PYGdefault{n+nv}{DEX}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{REC1}
+	\PYGdefault{n+nf}{DECA}
+	\PYGdefault{n+nf}{BNE}	\PYGdefault{n+nv}{REC2}
+	\PYGdefault{n+nf}{NOP}
+	\PYGdefault{n+nf}{BRA}	\PYGdefault{n+nv}{FIN\PYGdefaultZus{}IT}
+\PYGdefault{c+c1}{;*\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}}
+\end{Verbatim}
