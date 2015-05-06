@@ -15,5 +15,6 @@ for dir in tp*
         pdflatex --shell-escape $dir.tex
         cp $dir.pdf $report_folder
         cd $current_dir
+        rm -r $dir/pdf
     done
 
