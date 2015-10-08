@@ -34,7 +34,7 @@
 
 import sys, os, re
 import getopt
-from PyQt4 import QtGui #for test
+#from PyQt4 import QtGui #for test
 
 #- Classes --------------------------------------------------------------------#
 class pycodeparser:
@@ -49,19 +49,19 @@ class pycodeparser:
         self.classes    = {}
         self.dot = []
         self.dico_all = NestedDict()
-        
-        self.init_dico()        
-        
+
+        self.init_dico()
+
         self.parser_fichier()
-        
-        self.print_dico()
-    
+
+        self.print_dico
+
     def init_dico(self):
         self.dico_all[self.filename]['import']
         self.dico_all[self.filename]['from']
         self.dico_all[self.filename]['classes']
         self.dico_all[self.filename]['functions']
-    
+
     def parser_fichier(self):
         current_class = None
         current_funct = None
@@ -70,7 +70,7 @@ class pycodeparser:
             fp = open(self.filename, 'r')
         except:
             return
-        
+
         for line in fp:
             # Path ------------------------------------------------------------#
             match = re.match(r"^sys\.path\.append\([\"']{1}([^\"']+)[\"']{1}\)", line)
@@ -85,7 +85,7 @@ class pycodeparser:
             match = re.match(r"^from ([^ ]+) import", line)
             if match:
                 self.dico_all[self.filename]['from'] = match.group(1)
-                
+
                 self.tab_from.append(match.group(1))
                 for p in self.tab_path:
                     if p[-1] == '/':
@@ -97,49 +97,49 @@ class pycodeparser:
             match = re.match(r"^class ([^\(: ]+)\(?([^\)]*)\)?:+", line)
             if match:
                 current_class = match.group(1)
-                
+
                 try:
                     self.classes.update({match.group(1):match.group(2)})
                     print '-->',match.group(1)
                     if match.group(2):
                         self.dico_all[self.filename]['classes'][current_class]['inheritance'] = match.group(2)
-                        
+
                 except:
                     self.classes.update({match.group(1):''})
                     self.dico_all[self.filename]['classes'][current_class]['inheritance'][match.group(2)]
-                
+
             # Functions -------------------------------------------------------#
             match = re.match(r"^def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
-                
+
                 try:
                     self.dico_all[self.filename]['functions'][match.group(1)] = match.group(2)
                     self.functions.update({match.group(1):match.group(2)})
-                    
+
                 except:
                     self.functions.update({match.group(1):''})
-                
+
                 current_funct = match.group(1)
             # Class methods ---------------------------------------------------#
             match = re.match(r"^[ \t]+def ([^\(: \t]+)[ \t]*\(?([^\)]*)\)?:+", line)
             if match:
                 self.dico_all[self.filename]['classes'][current_class]['methods'][match.group(1)]
-                
+
                 if current_class is None:
                     print "Gros fail !"
-                
+
                 if self.methods.has_key(current_class):
                    self.methods[current_class].append(match.group(1))
                 else:
                     tmp = [match.group(1)]
-                
+
                 self.methods.update({current_class:tmp})
                 current_method = match.group(1)
-            
+
             # Dot Graph -------------------------------------------------------#
         fp.close()
 #        self.dico_all.print_dico()
-    
+    @property
     def print_dico(self):
         print "path      :",self.tab_path
         print "import    :",self.tab_import
@@ -151,8 +151,8 @@ class pycodeparser:
 
 class NestedDict(dict):
     """ Implementation of Nested Dictionary feature.
-        
-    
+
+
     """
     def __getitem__(self, item):
         try:
@@ -160,10 +160,10 @@ class NestedDict(dict):
         except KeyError:
             value = self[item] = type(self)()
             return value
-            
+
     def print_dico(self,indent = 0):
         """ Displaying nested dictionaries
-        
+
             >>> d = NestedDict()
             >>> d['test']
             {}
@@ -172,7 +172,7 @@ class NestedDict(dict):
             >>> d['test']['ya']
             {}
             >>> d['The Game']['yu']['my hands are typing words'] = 'end'
-            
+
 
         """
         for key, value in self.iteritems():
@@ -193,7 +193,7 @@ def usage():
 if __name__=='__main__':
     import doctest
     doctest.testmod()
-    
+
     try:
         opts, args = getopt.getopt(sys.argv[1:], "i:h", ["input=", "help"])
     except getopt.GetoptError as err:
@@ -214,8 +214,8 @@ if __name__=='__main__':
         sys.exit()
     else:
         a = pycodeparser(input_data)
-    
-    
+
+
 #------------------------------------------------------------------------------#
 
 
