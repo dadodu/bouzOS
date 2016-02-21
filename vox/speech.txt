@@ -1,1 +1,2 @@
-Bonjour je m'apelle John
+Bonjour je m'apelle John.
+Comment allez vous ?

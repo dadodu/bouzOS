@@ -1,10 +1,9 @@
 #/bin/python2
 
+import os, sys, getpass
 import urllib2
-import urllib
 import time
-import os, sys
-import getpass
+
 
 """
     Main function.
@@ -23,23 +22,32 @@ def main():
 """
 def speak(text, lang='fr', fname='result.wav', player='mplayer'):
 
-    url = "http://translate.google.com/translate_tts"
-    values = urllib.urlencode({"q": text, "textlen": len(text), "tl": lang})
-    hrs = {"User-Agent": "Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7"}
-    
-    limit = min(100, len(text))#100 characters is the current limit.
-    text = text[0:limit]
+    # 100 characters is the current limit.
+    limit = min(100, len(text))
     print "[+] Text to speech:", text
+
+    text  = text[0:limit].replace(" ","+")
+    url   = "http://translate.google.com/translate_tts?ie=utf8&tl={0}&q={1}"
+    hrs   = {'User-Agent': 'Mozilla/5.0'}
+    hrs   = {'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7'}
+
+
+    request = urllib2.Request(url.format(lang,text), headers=hrs)
+    print request.read()
     try:
-        req = urllib2.Request(url, data=values, headers=hrs)
-    except:
-        print "[-] Failed google request."
-        return 1
-    p = urllib2.urlopen(req)
+        #result = urllib2.urlopen(url.format(lang,text))
+        result = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        print "[-] Error: %d %s." % (e.code, e.reason)
+        return
+    except urllib2.URLError as e:
+        print "[-] Error: %s." % (e.reason)
+        return
+
     f = open(fname, 'wb')
-    f.write(p.read())
+    f.write(result.read())
     f.close()
-    
+
     play_wav(fname, player)
 
 """
